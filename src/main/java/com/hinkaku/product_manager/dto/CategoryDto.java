@@ -5,12 +5,12 @@ import lombok.*;
 import java.util.UUID;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class DepartementDto {
+public class CategoryDto {
 
-    private UUID id;
+    private UUID idCategory;
 
-    private String nom;
+    private String nomCategory;
 }

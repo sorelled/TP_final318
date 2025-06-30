@@ -37,9 +37,6 @@ public class Produit {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "departement_id", nullable = false)
-    private Departement departement;
 
     @AssertTrue(message = "La date d'expiration doit être au moins 7 jours dans le futur")
     public boolean isDateExpirationValid() {
