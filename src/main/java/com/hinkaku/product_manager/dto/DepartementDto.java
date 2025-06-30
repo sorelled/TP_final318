@@ -1,4 +1,4 @@
-package com.hinkaku.product_manager.DTO;
+package com.hinkaku.product_manager.dto;
 
 import lombok.*;
 
@@ -8,7 +8,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class departementDTO {
+public class DepartementDto {
 
     private UUID id;
 

@@ -1,4 +1,4 @@
-package com.hinkaku.product_manager.DTO;
+package com.hinkaku.product_manager.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -9,7 +9,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class produitDTO {
+public class ProduitDto {
 
     private UUID idProduit;
 
