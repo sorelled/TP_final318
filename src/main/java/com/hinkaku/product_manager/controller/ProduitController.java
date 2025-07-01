@@ -2,13 +2,14 @@ package com.hinkaku.product_manager.controller;
 
 import com.hinkaku.product_manager.dto.ProduitDto;
 import com.hinkaku.product_manager.service.ProduitService;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@RestController
-@RequestMapping("/api/produits")
+@Controller
+@RequestMapping("/produits")
 public class ProduitController {
 
     private final ProduitService produitService;
@@ -18,28 +19,44 @@ public class ProduitController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProduitDto>> getAllProduits() {
-        return ResponseEntity.ok(produitService.getAllProduits());
+    public String listProduits(Model model) {
+        model.addAttribute("produits", produitService.getAllProduits());
+        return "produits/list";
+    }
+
+    @GetMapping("/add")
+    public String showAddProduitForm(Model model) {
+        model.addAttribute("produitDto", new ProduitDto());
+        return "produits/add";
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProduitDto> getProduitById(@PathVariable UUID id) {
-        return ResponseEntity.ok(produitService.getProduitById(id));
+    public String getProduitById(@PathVariable UUID id, Model model) {
+        model.addAttribute("produit", produitService.getProduitById(id));
+        return "produits/view";
     }
 
-    @PostMapping
-    public ResponseEntity<ProduitDto> createProduit(@RequestBody ProduitDto produitDto) {
-        return ResponseEntity.ok(produitService.addProduit(produitDto));
+    @PostMapping("/save")
+    public String saveProduit(@ModelAttribute("produitDto") ProduitDto produitDto) {
+        produitService.addProduit(produitDto);
+        return "redirect:/produits";
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ProduitDto> updateProduit(@PathVariable UUID id, @RequestBody ProduitDto produitDto) {
-        return ResponseEntity.ok(produitService.updateProduit(id, produitDto));
+    @GetMapping("/{id}/edit")
+    public String showEditProduitForm(@PathVariable UUID id, Model model) {
+        model.addAttribute("produitDto", produitService.getProduitById(id));
+        return "produits/edit";
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduit(@PathVariable UUID id) {
+    @PostMapping("/{id}/update")
+    public String updateProduit(@PathVariable UUID id, @ModelAttribute("produitDto") ProduitDto produitDto) {
+        produitService.updateProduit(id, produitDto);
+        return "redirect:/produits";
+    }
+
+    @GetMapping("/{id}/delete")
+    public String deleteProduit(@PathVariable UUID id) {
         produitService.deleteProduit(id);
-        return ResponseEntity.noContent().build();
+        return "redirect:/produits";
     }
 }
