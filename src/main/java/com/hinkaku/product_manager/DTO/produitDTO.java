@@ -1,42 +1,35 @@
-package com.hinkaku.product_manager.model;
+package com.hinkaku.product_manager.dto;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
-
-@Entity
-@Table(name = "produits")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Produit {
+public class ProduitDto {
 
-    @Id
-    @GeneratedValue
     private UUID idProduit;
 
-    @Column(nullable = false)
     @NotBlank(message = "Le nom du produit est obligatoire")
     @Size(min = 2, max = 100, message = "Le nom doit contenir entre 2 et 100 caractères")
     private String nomProduit;
 
-    @Column(nullable = false)
     @NotNull(message = "Le prix est obligatoire")
     @Positive(message = "Le prix doit être positif")
     private Integer prixProduit;
 
-    @Column(nullable = false)
+    @NotNull(message = "La date d'expiration est obligatoire")
     @Future(message = "La date d'expiration doit être dans le futur")
     private LocalDate dateExpiration;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    @NotNull(message = "La catégorie est obligatoire")
+    private UUID categoryId;
 
+    @NotNull(message = "Le département est obligatoire")
+    private UUID departementId;
 
     @AssertTrue(message = "La date d'expiration doit être au moins 7 jours dans le futur")
     public boolean isDateExpirationValid() {

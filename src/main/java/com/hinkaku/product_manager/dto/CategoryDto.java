@@ -8,7 +8,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategorieDto {
+public class CategoryDto {
 
     private UUID idCategory;
 
