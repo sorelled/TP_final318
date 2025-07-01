@@ -21,19 +21,10 @@ public class ProduitDto {
     @Positive(message = "Le prix doit être positif")
     private Integer prixProduit;
 
-    @NotNull(message = "La date d'expiration est obligatoire")
     @Future(message = "La date d'expiration doit être dans le futur")
     private LocalDate dateExpiration;
 
     @NotNull(message = "La catégorie est obligatoire")
-    private UUID categoryId;
+    private UUID categoryId; // on stocke juste l'ID de la catégorie
 
-    @NotNull(message = "Le département est obligatoire")
-    private UUID departementId;
-
-    @AssertTrue(message = "La date d'expiration doit être au moins 7 jours dans le futur")
-    public boolean isDateExpirationValid() {
-        if (dateExpiration == null) return false;
-        return dateExpiration.isAfter(LocalDate.now().plusDays(7));
-    }
 }
