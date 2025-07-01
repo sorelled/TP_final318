@@ -1,96 +1,88 @@
 <!DOCTYPE html>
-<html lang="en"
+<html lang="fr"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{base}">
 
-<head th:replace="~{base::page_head(titrePage='Liste des Produits')}"></head>
+<head>
+    <title>Liste des Produits</title>
+</head>
 
 <body>
-<!-- Inclusion du header -->
-<div layout:fragment="header" th:replace="~{layouts/_header :: header}"></div>
-
-<!-- Contenu principal -->
 <div layout:fragment="content">
-    <div class="justify-content-center mt-5">
-        <div class="container">
-            <div class="justify-content-center m-5">
-                <hr>
-                <h2 class="text-center text-success">Liste des Produits</h2>
-                <hr>
+    <div class="container mt-5">
+        <div class="m-4">
+            <h2 class="text-center text-success border-bottom pb-2">Liste des Produits</h2>
 
-                <!-- Message flash -->
-                <div th:if="${msg}" class="alert alert-primary alert-dismissible fade show">
-                    <span th:text="${msg}"></span>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
+            <!-- Message flash -->
+            <div th:if="${msg}" class="alert alert-primary alert-dismissible fade show mt-3">
+                <span th:text="${msg}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
 
-                <a class="btn btn-sm btn-primary mb-2" th:href="@{/produits/create}">
-                    Nouveau Produit
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a class="btn btn-primary" th:href="@{/produits/create}">
+                    <i class="fa-solid fa-plus me-1"></i> Nouveau Produit
                 </a>
+            </div>
 
+            <div class="table-responsive">
                 <table class="table table-hover table-bordered table-striped">
-                    <thead>
-                    <tr class="table-success">
-                        <th scope="col" class="text-center">N°</th>
+                    <thead class="table-success">
+                    <tr>
+                        <th scope="col" class="text-center">#</th>
                         <th scope="col">Nom</th>
-                        <th scope="col" class="text-center">Prix</th>
+                        <th scope="col" class="text-end">Prix</th>
                         <th scope="col" class="text-center">Date Expiration</th>
                         <th scope="col" class="text-center">Catégorie</th>
-                        <th scope="col" class="text-center">Action</th>
+                        <th scope="col" class="text-center">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <th:block th:each="p, iterStat : ${produits}">
-                        <tr>
-                            <td class="text-center" th:text="${iterStat.index + 1}"></td>
-                            <td class="text-start" th:text="${p.nomProduit}"></td>
-                            <td class="text-end" th:text="${p.prixProduit + ' FCFA'}"></td>
-                            <td class="text-center" th:text="${p.dateExpiration}"></td>
-                            <td class="text-center" th:text="${p.categoryId}"></td>
-                            <td class="text-center">
-                                <a class="btn btn-warning btn-sm"
-                                   th:href="@{'/produits/' + ${p.idProduit} + '/edit'}"
-                                   title="Modifier le produit">
-                                    <i class="fa-solid fa-pen-nib"></i>
-                                </a>
-                                <a class="btn btn-danger btn-sm"
-                                   href="#"
-                                   data-bs-toggle="modal"
-                                   th:data-bs-target="'#modal' + ${p.idProduit}">
-                                    <i class="fa-solid fa-trash"></i>
-                                </a>
+                    <tr th:each="p, iterStat : ${produits}">
+                        <td class="text-center" th:text="${iterStat.index + 1}"></td>
+                        <td th:text="${p.nomProduit}"></td>
+                        <td class="text-end" th:text="${#numbers.formatDecimal(p.prixProduit, 0, 'COMMA', 2, 'POINT') + ' FCFA'}"></td>
+                        <td class="text-center" th:text="${#temporals.format(p.dateExpiration, 'dd/MM/yyyy')}"></td>
+                        <td class="text-center" th:text="${p.categoryId}"></td>
+                        <td class="text-center">
+                            <a class="btn btn-warning btn-sm"
+                               th:href="@{'/produits/' + ${p.idProduit} + '/edit'}"
+                               title="Modifier">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                            <button class="btn btn-danger btn-sm ms-1"
+                                    data-bs-toggle="modal"
+                                    th:data-bs-target="'#modal' + ${p.idProduit}"
+                                    title="Supprimer">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
 
-                                <!-- Modal de suppression -->
-                                <div class="modal fade text-start" th:id="'modal' + ${p.idProduit}"
-                                     data-bs-backdrop="static">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Suppression d'un produit</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p>Supprimer le produit [[${p.nomProduit}]] ?</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <a class="btn btn-danger"
-                                                   th:href="@{'/produits/' + ${p.idProduit} + '/delete'}">
-                                                    Oui, Supprimer
-                                                </a>
-                                                <button type="button" class="btn btn-success"
-                                                        data-bs-dismiss="modal">
-                                                    Non, Annuler
-                                                </button>
-                                            </div>
+                            <!-- Modal de suppression -->
+                            <div class="modal fade" th:id="'modal' + ${p.idProduit}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-danger text-white">
+                                            <h5 class="modal-title">Confirmation de suppression</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Voulez-vous vraiment supprimer le produit <strong th:text="${p.nomProduit}"></strong> ?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form th:action="@{'/produits/' + ${p.idProduit} + '/delete'}" method="post">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Fin Modal -->
-                            </td>
-                        </tr>
-                    </th:block>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(produits)}">
+                        <td colspan="6" class="text-center text-muted py-4">Aucun produit trouvé</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -98,7 +90,7 @@
     </div>
 </div>
 
-<!-- Inclusion du footer -->
-<div th:replace="~{base::bas_de_page}"></div>
+<!-- Font Awesome pour les icônes -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 </body>
 </html>
